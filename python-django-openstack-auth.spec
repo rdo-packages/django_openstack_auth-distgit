@@ -2,7 +2,7 @@
 
 Name:           python-django-openstack-auth
 Version:        1.1.6
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Django authentication backend for OpenStack Keystone 
 
 License:        BSD
@@ -19,11 +19,7 @@ BuildArch:      noarch
  
 BuildRequires:  python2-devel
 BuildRequires:  python-setuptools
-%if 0%{?rhel}==6
-BuildRequires:  python-sphinx10
-%else
 BuildRequires:  python-sphinx
-%endif
 BuildRequires:  python-mox
 BuildRequires:  python-keystoneclient
 BuildRequires:  python-iso8601
@@ -31,18 +27,8 @@ BuildRequires:  python-pbr
 BuildRequires:  python-netaddr
 BuildRequires:  python-oslo-sphinx
 
-%if 0%{?rhel}<7 || 0%{?fedora} < 18
-%if 0%{?rhel}==6
-Requires:   Django14
-BuildRequires: Django14
-%else
-Requires:   Django
-BuildRequires:   Django
-%endif
-%else
 Requires:   python-django
 BuildRequires:   python-django
-%endif
  
 Requires:       python-keystoneclient
 
@@ -79,11 +65,7 @@ sed -i 's/oslosphinx/oslo.sphinx/' doc/source/conf.py
 %{__python} setup.py build
 
 # generate html docs
-%if 0%{?rhel}==6
-PYTHONPATH=.:$PYTHONPATH sphinx-1.0-build doc/source html
-%else
 PYTHONPATH=.:$PYTHONPATH sphinx-build doc/source html
-%endif
 
 %install
 %{__python} setup.py install --skip-build --root %{buildroot}
@@ -116,6 +98,9 @@ rm -rf %{buildroot}/%{python_sitelib}/openstack_auth/tests
 %{python_sitelib}/%{pypi_name}-%{version}-py?.?.egg-info
 
 %changelog
+* Thu Sep 11 2014 Matthias Runge <mrunge@redhat.com> - 1.1.6-3
+- spec cleanup
+
 * Mon Aug 25 2014 Matthias Runge <mrunge@redhat.com> - 1.1.6-2
 - bump version
 
