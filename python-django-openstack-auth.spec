@@ -13,7 +13,6 @@ Source0:        http://pypi.python.org/packages/source/d/%{pypi_name}/%{pypi_nam
 # patches_base=1.1.7
 #
 Patch0001: 0001-remove-runtime-dep-to-python-pbr.patch
-Patch0002: 0002-Adding-back-the-forms.Login-import.patch
 
 BuildArch:      noarch
  
@@ -44,7 +43,6 @@ Keystone V2 API.
 %setup -q -n %{pypi_name}-%{version}
 
 %patch0001 -p1
-%patch0002 -p1
 
 # Remove bundled egg-info
 # rm -rf %{pypi_name}.egg-info
