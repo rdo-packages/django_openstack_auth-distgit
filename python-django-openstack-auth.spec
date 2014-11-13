@@ -2,7 +2,7 @@
 
 Name:           python-django-openstack-auth
 Version:        1.1.7
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Django authentication backend for OpenStack Keystone 
 
 License:        BSD
@@ -91,11 +91,19 @@ rm -rf %{buildroot}/%{python_sitelib}/openstack_auth/tests
 %files -f django.lang
 %doc LICENSE
 %dir %{python_sitelib}/openstack_auth
+%dir %{python_sitelib}/openstack_auth/locale
+%dir %{python_sitelib}/openstack_auth/locale/??/
+%dir %{python_sitelib}/openstack_auth/locale/??_??/
+%dir %{python_sitelib}/openstack_auth/locale/??/LC_MESSAGES
+%dir %{python_sitelib}/openstack_auth/locale/??_??/LC_MESSAGES
 %{python_sitelib}/openstack_auth/*.py*
 %{python_sitelib}/openstack_auth/locale/openstack_auth.pot
 %{python_sitelib}/%{pypi_name}-%{version}-py?.?.egg-info
 
 %changelog
+* Thu Nov 13 2014 Matthias Runge <mrunge@redhat.com> - 1.1.7-2
+- own locale dirs (rhbz#1163362)
+
 * Fri Sep 26 2014 Matthias Runge <mrunge@redhat.com> - 1.1.7-1
 - update to 1.1.7 (rhbz#1145024)
 
