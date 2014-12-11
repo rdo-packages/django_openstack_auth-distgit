@@ -2,8 +2,8 @@
 
 Name:           python-django-openstack-auth
 Version:        1.1.7
-Release:        2%{?dist}
-Summary:        Django authentication backend for OpenStack Keystone 
+Release:        3%{?dist}
+Summary:        Django authentication backend for OpenStack Keystone
 
 License:        BSD
 URL:            http://pypi.python.org/pypi/django_openstack_auth/
@@ -13,9 +13,10 @@ Source0:        http://pypi.python.org/packages/source/d/%{pypi_name}/%{pypi_nam
 # patches_base=1.1.7
 #
 Patch0001: 0001-remove-runtime-dep-to-python-pbr.patch
+Patch0002: 0002-Horizon-login-page-contains-DOS-attack-mechanism.patch
 
 BuildArch:      noarch
- 
+
 BuildRequires:  python2-devel
 BuildRequires:  python-setuptools
 BuildRequires:  python-sphinx
@@ -43,6 +44,7 @@ Keystone V2 API.
 %setup -q -n %{pypi_name}-%{version}
 
 %patch0001 -p1
+%patch0002 -p1
 
 # Remove bundled egg-info
 # rm -rf %{pypi_name}.egg-info
@@ -101,6 +103,9 @@ rm -rf %{buildroot}/%{python_sitelib}/openstack_auth/tests
 %{python_sitelib}/%{pypi_name}-%{version}-py?.?.egg-info
 
 %changelog
+* Thu Dec 11 2014 Matthias Runge <mrunge@redhat.com> - 1.1.7-3
+- fix CVE-2014-8124 (rhbz#1170421)
+
 * Thu Nov 13 2014 Matthias Runge <mrunge@redhat.com> - 1.1.7-2
 - own locale dirs (rhbz#1163362)
 
