@@ -27,10 +27,12 @@ BuildRequires:  python-netaddr
 BuildRequires:  python-oslo-sphinx
 BuildRequires:  gettext
 
-Requires:   python-django
-BuildRequires:   python-django
+Requires:       python-django
+BuildRequires:  python-django
 
-Requires:       python-keystoneclient
+Requires:       python-keystoneclient >= 1.1.0
+Requires:       python-six >= 1.9.0
+Requires:       python-oslo-config >= 1.9.3
 
 %description
 Django OpenStack Auth is a pluggable Django authentication backend that
