@@ -13,6 +13,7 @@ Source0:        http://pypi.python.org/packages/source/d/%{pypi_name}/%{pypi_nam
 # patches_base=1.2.0
 #
 Patch0001: 0001-remove-runtime-dep-to-python-pbr.patch
+Patch0002: 0002-Replace-AnonymousUser-with-AbstractUser.patch
 
 BuildArch:      noarch
 
@@ -46,6 +47,7 @@ Keystone V2 API.
 %setup -q -n %{pypi_name}-%{version}
 
 %patch0001 -p1
+%patch0002 -p1
 
 # Remove bundled egg-info
 rm -rf %{pypi_name}.egg-info
@@ -107,12 +109,14 @@ rm -rf %{buildroot}/%{python_sitelib}/openstack_auth/tests
 %dir %{python_sitelib}/openstack_auth/locale/??_??/LC_MESSAGES
 %{python_sitelib}/openstack_auth/*.py*
 %{python_sitelib}/openstack_auth/openstack
+%{python_sitelib}/openstack_auth/plugin
 %{python_sitelib}/openstack_auth/locale/openstack_auth.pot
 %{python_sitelib}/%{pypi_name}-%{version}-py?.?.egg-info
 
 %changelog
 * Tue Apr 14 2015 Matthias Runge <mrunge@redhat.com> - 1.2.0-1
 - rebase to 1.2.0
+- Use AbstractUser instead of AnonymousUser
 
 * Wed Feb 04 2015 Matthias Runge <mrunge@redhat.com> - 1.1.9-1
 - rebase to 1.1.9 (rhbz#1145024)
