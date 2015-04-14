@@ -1,7 +1,7 @@
 %global pypi_name django_openstack_auth
 
 Name:           python-django-openstack-auth
-Version:        1.1.9
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        Django authentication backend for OpenStack Keystone
 
@@ -10,7 +10,7 @@ URL:            http://pypi.python.org/pypi/django_openstack_auth/
 Source0:        http://pypi.python.org/packages/source/d/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 
 #
-# patches_base=1.1.9
+# patches_base=1.2.0
 #
 Patch0001: 0001-remove-runtime-dep-to-python-pbr.patch
 
@@ -29,7 +29,7 @@ BuildRequires:  gettext
 
 Requires:   python-django
 BuildRequires:   python-django
- 
+
 Requires:       python-keystoneclient
 
 %description
@@ -109,6 +109,9 @@ rm -rf %{buildroot}/%{python_sitelib}/openstack_auth/tests
 %{python_sitelib}/%{pypi_name}-%{version}-py?.?.egg-info
 
 %changelog
+* Tue Apr 14 2015 Matthias Runge <mrunge@redhat.com> - 1.2.0-1
+- rebase to 1.2.0
+
 * Wed Feb 04 2015 Matthias Runge <mrunge@redhat.com> - 1.1.9-1
 - rebase to 1.1.9 (rhbz#1145024)
 
