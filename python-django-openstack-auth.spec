@@ -25,6 +25,7 @@ BuildRequires:  python-iso8601
 BuildRequires:  python-pbr
 BuildRequires:  python-netaddr
 BuildRequires:  python-oslo-sphinx
+BuildRequires:  gettext
 
 Requires:   python-django
 BuildRequires:   python-django
@@ -45,10 +46,7 @@ Keystone V2 API.
 %patch0001 -p1
 
 # Remove bundled egg-info
-# rm -rf %{pypi_name}.egg-info
-
-# remove unnecessary .po files
-find . -name "django.po" -exec rm -f '{}' \;
+rm -rf %{pypi_name}.egg-info
 
 sed -i s/RPMVERSION/%{version}/ openstack_auth/__init__.py
 
@@ -60,6 +58,13 @@ rm -f {test-,}requirements.txt
 sed -i 's/oslosphinx/oslo.sphinx/' doc/source/conf.py
 
 %build
+# generate translations
+cd openstack_auth && django-admin compilemessages && cd ..
+
+# remove unnecessary .po files
+find . -name "django.po" -exec rm -f '{}' \;
+
+
 %{__python} setup.py build
 
 # generate html docs
@@ -67,6 +72,8 @@ PYTHONPATH=.:$PYTHONPATH sphinx-build doc/source html
 
 %install
 %{__python} setup.py install --skip-build --root %{buildroot}
+
+cp -r openstack_auth/locale %{buildroot}/%{python_sitelib}/openstack_auth
 
 %if 0%{?rhel}==6
 # Handling locale files
@@ -97,6 +104,7 @@ rm -rf %{buildroot}/%{python_sitelib}/openstack_auth/tests
 %dir %{python_sitelib}/openstack_auth/locale/??/LC_MESSAGES
 %dir %{python_sitelib}/openstack_auth/locale/??_??/LC_MESSAGES
 %{python_sitelib}/openstack_auth/*.py*
+%{python_sitelib}/openstack_auth/openstack
 %{python_sitelib}/openstack_auth/locale/openstack_auth.pot
 %{python_sitelib}/%{pypi_name}-%{version}-py?.?.egg-info
 
