@@ -25,7 +25,7 @@ BuildRequires:  python-keystoneclient
 BuildRequires:  python-iso8601
 BuildRequires:  python-pbr
 BuildRequires:  python-netaddr
-BuildRequires:  python-oslo-sphinx
+BuildRequires:  python-oslo-sphinx >= 2.3.0
 BuildRequires:  gettext
 
 Requires:       python-django
@@ -57,9 +57,6 @@ sed -i s/RPMVERSION/%{version}/ openstack_auth/__init__.py
 # Remove the requirements file so that pbr hooks don't add it
 # to distutils requires_dist config
 rm -f {test-,}requirements.txt
-
-# make doc build compatible with python-oslo-sphinx RPM
-sed -i 's/oslosphinx/oslo.sphinx/' doc/source/conf.py
 
 %build
 # generate translations
