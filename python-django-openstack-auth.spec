@@ -2,18 +2,14 @@
 
 Name:           python-django-openstack-auth
 Version:        1.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Django authentication backend for OpenStack Keystone
 
 License:        BSD
 URL:            http://pypi.python.org/pypi/django_openstack_auth/
 Source0:        http://pypi.python.org/packages/source/d/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 
-#
-# patches_base=1.2.0
-#
-Patch0001: 0001-remove-runtime-dep-to-python-pbr.patch
-Patch0002: 0002-Replace-AnonymousUser-with-AbstractUser.patch
+Patch0001: 0001-Replace-AnonymousUser-with-AbstractBaseUser.patch
 
 BuildArch:      noarch
 
@@ -31,9 +27,11 @@ BuildRequires:  gettext
 Requires:       python-django
 BuildRequires:  python-django
 
-Requires:       python-keystoneclient >= 1.1.0
+Requires:       python-keystoneclient >= 1:1.1.0
 Requires:       python-six >= 1.9.0
 Requires:       python-oslo-config >= 1.9.3
+Requires:       python-pbr
+
 
 %description
 Django OpenStack Auth is a pluggable Django authentication backend that
@@ -47,7 +45,6 @@ Keystone V2 API.
 %setup -q -n %{pypi_name}-%{version}
 
 %patch0001 -p1
-%patch0002 -p1
 
 # Remove bundled egg-info
 rm -rf %{pypi_name}.egg-info
@@ -111,6 +108,11 @@ rm -rf %{buildroot}/%{python_sitelib}/openstack_auth/tests
 %{python_sitelib}/%{pypi_name}-%{version}-py?.?.egg-info
 
 %changelog
+* Fri May 08 2015 Alan Pevec <apevec@redhat.com> - 1.2.0-2
+- update Use AbstractUser instead of AnonymousUser (mrunge)
+  Fixes rhbz#1218894 rhbz#1218899
+- drop pbr.version removal
+
 * Tue Apr 14 2015 Matthias Runge <mrunge@redhat.com> - 1.2.0-1
 - rebase to 1.2.0
 - Use AbstractUser instead of AnonymousUser
