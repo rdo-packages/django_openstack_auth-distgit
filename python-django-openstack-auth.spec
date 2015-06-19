@@ -2,7 +2,7 @@
 
 Name:           python-django-openstack-auth
 Version:        1.2.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Django authentication backend for OpenStack Keystone
 
 License:        BSD
@@ -108,6 +108,9 @@ rm -rf %{buildroot}/%{python_sitelib}/openstack_auth/tests
 %{python_sitelib}/%{pypi_name}-%{version}-py?.?.egg-info
 
 %changelog
+* Fri Jun 19 2015 Matthias Runge <mrunge@redhat.com> - 1.2.0-4
+- "App 'openstack_auth' doesn't have a 'user' model." (rhbz#1232683)
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
