@@ -10,7 +10,8 @@ URL:            http://pypi.python.org/pypi/django_openstack_auth/
 Source0:        http://pypi.python.org/packages/source/d/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 
 Patch0001: 0001-remove-runtime-dep-to-python-pbr.patch
-Patch0002: 0002-Replace-AnonymousUser-with-AbstractBaseUser.patch
+Patch0002: 0002-Extend-User-from-AbstractBaseUser-and-AnonymousUser.patch
+Patch0003: 0003-Configurable-token-hashing.patch
 
 BuildArch:      noarch
 
@@ -47,6 +48,7 @@ Keystone V2 API.
 
 %patch0001 -p1
 %patch0002 -p1
+%patch0003 -p1
 
 # Remove bundled egg-info
 rm -rf %{pypi_name}.egg-info

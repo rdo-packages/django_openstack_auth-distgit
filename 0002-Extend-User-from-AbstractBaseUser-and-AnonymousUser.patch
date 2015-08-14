@@ -1,0 +1,129 @@
+From c3c5bdbdf557bf09816fd3c5dc9dc36499832f64 Mon Sep 17 00:00:00 2001
+From: Matthias Runge <mrunge@redhat.com>
+Date: Thu, 26 Mar 2015 14:04:18 +0100
+Subject: [PATCH] Extend User from AbstractBaseUser and AnonymousUser
+
+Django-1.8 added _meta classes for User models,
+which aren't supported by AnonymousUsers, the
+AbstractBaseUser provides default implementation
+for _meta classes.
+
+SimpleTest has been deprecated since Django-1.6 and
+was now removed.
+
+Unfortunately, this change drops Django-1.6 (and earlier) compatibility.
+
+Co-Authored-By: Lin Hua Cheng <os.lcheng@gmail.com>
+
+Partially Implements: blueprint django18
+Change-Id: Ie243fd2304421694023f579f49f8fa201e761ba3
+
+(cherry picked from commit da2395146eb0cc351f1ee46848a142433629d53a)
+---
+ openstack_auth/tests/run_tests.py |  7 +++++--
+ openstack_auth/user.py            |  7 +++++--
+ tox.ini                           | 19 ++++++++++++++-----
+ 3 files changed, 24 insertions(+), 9 deletions(-)
+
+diff --git a/openstack_auth/tests/run_tests.py b/openstack_auth/tests/run_tests.py
+index 32ec848..b317967 100644
+--- a/openstack_auth/tests/run_tests.py
++++ b/openstack_auth/tests/run_tests.py
+@@ -20,7 +20,10 @@ import sys
+ os.environ['DJANGO_SETTINGS_MODULE'] = 'openstack_auth.tests.settings'
+ 
+ import django
+-from django.test import simple as test_simple
++if django.VERSION < (1, 8, 0):
++    from django.test.simple import DjangoTestSuiteRunner as test_runner
++else:
++    from django.test.runner import DiscoverRunner as test_runner
+ 
+ if hasattr(django, 'setup'):
+     django.setup()
+@@ -35,7 +38,7 @@ def run(*test_args):
+         "..",
+     )
+     sys.path.insert(0, parent)
+-    failures = test_simple.DjangoTestSuiteRunner().run_tests(test_args)
++    failures = test_runner().run_tests(test_args)
+     sys.exit(failures)
+ 
+ 
+diff --git a/openstack_auth/user.py b/openstack_auth/user.py
+index 811fe84..a9faa8e 100644
+--- a/openstack_auth/user.py
++++ b/openstack_auth/user.py
+@@ -116,7 +116,7 @@ class Token(object):
+         self.serviceCatalog = auth_ref.service_catalog.get_data()
+ 
+ 
+-class User(models.AnonymousUser):
++class User(models.AbstractBaseUser, models.AnonymousUser):
+     """A User class with some extra special sauce for Keystone.
+ 
+     In addition to the standard Django user attributes, this class also has
+@@ -190,7 +190,7 @@ class User(models.AnonymousUser):
+                  services_region=None, user_domain_id=None,
+                  user_domain_name=None, domain_id=None, domain_name=None,
+                  project_id=None, project_name=None,
+-                 is_federated=False, unscoped_token=None):
++                 is_federated=False, unscoped_token=None, password=None):
+         self.id = id
+         self.pk = id
+         self.token = token
+@@ -220,6 +220,9 @@ class User(models.AnonymousUser):
+         self.tenant_id = self.project_id
+         self.tenant_name = self.project_name
+ 
++        # Required by AbstractBaseUser
++        self.password = None
++
+     def __unicode__(self):
+         return self.username
+ 
+diff --git a/tox.ini b/tox.ini
+index 3b78a4e..2745e72 100644
+--- a/tox.ini
++++ b/tox.ini
+@@ -1,7 +1,7 @@
+ [tox]
+ minversion = 1.6
+ skipsdist = True
+-envlist = py27,py27dj14,py27dj15,pep8,py33,py34
++envlist = py27,py27dj17,py27dj18,pep8,py33,py34
+ 
+ [testenv]
+ usedevelop = True
+@@ -16,18 +16,27 @@ deps = -r{toxinidir}/requirements.txt
+        -r{toxinidir}/test-requirements.txt
+ commands = python openstack_auth/tests/run_tests.py {posargs}
+ 
+-[testenv:py27dj15]
+-commands = pip install django>=1.5,<1.6
++[testenv:cover]
++setenv = DJANGO_SETTINGS_MODULE=openstack_auth.tests.settings
++commands =
++    python -m coverage erase
++    python -m coverage run openstack_auth/tests/run_tests.py  {posargs}
++    python -m coverage html --include='openstack_auth/*' --omit='openstack_auth/tests/*' -d 'reports'
++    python -m coverage xml --include='openstack_auth/*' --omit='openstack_auth/tests/*'
++
++[testenv:py27dj17]
++commands = pip install django>=1.7,<1.8
+            python openstack_auth/tests/run_tests.py {posargs}
+ 
+-[testenv:py27dj14]
+-commands = pip install django>=1.4,<1.5
++[testenv:py27dj18]
++commands = pip install django>=1.8,<1.9
+            python openstack_auth/tests/run_tests.py {posargs}
+ 
+ [testenv:pep8]
+ setenv = DJANGO_SETTINGS_MODULE=openstack_auth.tests.settings
+ commands = flake8
+ 
++
+ [testenv:venv]
+ commands = {posargs}
+ 
