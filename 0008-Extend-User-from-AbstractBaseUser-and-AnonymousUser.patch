@@ -1,4 +1,4 @@
-From c3c5bdbdf557bf09816fd3c5dc9dc36499832f64 Mon Sep 17 00:00:00 2001
+From 3b8ac9e333033c9500a88a826f32c64d264f6641 Mon Sep 17 00:00:00 2001
 From: Matthias Runge <mrunge@redhat.com>
 Date: Thu, 26 Mar 2015 14:04:18 +0100
 Subject: [PATCH] Extend User from AbstractBaseUser and AnonymousUser
@@ -51,10 +51,10 @@ index 32ec848..b317967 100644
  
  
 diff --git a/openstack_auth/user.py b/openstack_auth/user.py
-index 811fe84..a9faa8e 100644
+index 77325de..9310aa7 100644
 --- a/openstack_auth/user.py
 +++ b/openstack_auth/user.py
-@@ -116,7 +116,7 @@ class Token(object):
+@@ -119,7 +119,7 @@ class Token(object):
          self.serviceCatalog = auth_ref.service_catalog.get_data()
  
  
@@ -63,7 +63,7 @@ index 811fe84..a9faa8e 100644
      """A User class with some extra special sauce for Keystone.
  
      In addition to the standard Django user attributes, this class also has
-@@ -190,7 +190,7 @@ class User(models.AnonymousUser):
+@@ -193,7 +193,7 @@ class User(models.AnonymousUser):
                   services_region=None, user_domain_id=None,
                   user_domain_name=None, domain_id=None, domain_name=None,
                   project_id=None, project_name=None,
@@ -72,7 +72,7 @@ index 811fe84..a9faa8e 100644
          self.id = id
          self.pk = id
          self.token = token
-@@ -220,6 +220,9 @@ class User(models.AnonymousUser):
+@@ -223,6 +223,9 @@ class User(models.AnonymousUser):
          self.tenant_id = self.project_id
          self.tenant_name = self.project_name
  

@@ -1,0 +1,73 @@
+From bef46730e7d245f6aa61c4d800d74a5ca616dad8 Mon Sep 17 00:00:00 2001
+From: lin-hua-cheng <os.lcheng@gmail.com>
+Date: Mon, 13 Jul 2015 17:39:34 -0700
+Subject: [PATCH] Fix Login form's fields sorting for Django 1.7
+
+Starting from Django 1.7 self.fields.keyOrder no longer works for
+setting fields ordering, need to rearrange fields there by recreating
+underlying OrderedDict.
+
+Change-Id: Idd015f0fa59061af2afc3936d8c37b004118bb64
+Closes-Bug: #1474157
+(cherry picked from commit 9c8406cbbc6b768921510aa99c999af380ca4ef2)
+---
+ openstack_auth/forms.py | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/openstack_auth/forms.py b/openstack_auth/forms.py
+index 9b03569..3a92ed1 100644
+--- a/openstack_auth/forms.py
++++ b/openstack_auth/forms.py
+@@ -11,8 +11,10 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
++import collections
+ import logging
+ 
++import django
+ from django.conf import settings
+ from django.contrib.auth import authenticate  # noqa
+ from django.contrib.auth import forms as django_auth_forms
+@@ -55,7 +57,7 @@ class Login(django_auth_forms.AuthenticationForm):
+ 
+     def __init__(self, *args, **kwargs):
+         super(Login, self).__init__(*args, **kwargs)
+-        self.fields.keyOrder = ['username', 'password', 'region']
++        fields_ordering = ['username', 'password', 'region']
+         if getattr(settings,
+                    'OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT',
+                    False):
+@@ -64,7 +66,7 @@ class Login(django_auth_forms.AuthenticationForm):
+                 required=True,
+                 widget=forms.TextInput(attrs={"autofocus": "autofocus"}))
+             self.fields['username'].widget = forms.widgets.TextInput()
+-            self.fields.keyOrder = ['domain', 'username', 'password', 'region']
++            fields_ordering = ['domain', 'username', 'password', 'region']
+         self.fields['region'].choices = self.get_region_choices()
+         if len(self.fields['region'].choices) == 1:
+             self.fields['region'].initial = self.fields['region'].choices[0][0]
+@@ -83,14 +85,21 @@ class Login(django_auth_forms.AuthenticationForm):
+                 required=False,
+                 initial=initial)
+             # move auth_type to the top of the list
+-            self.fields.keyOrder.pop(-1)
+-            self.fields.keyOrder.insert(0, 'auth_type')
++            fields_ordering.pop(-1)
++            fields_ordering.insert(0, 'auth_type')
+ 
+         # websso is enabled, but keystone version is not supported
+         elif getattr(settings, 'WEBSSO_ENABLED', False):
+             msg = ("Websso is enabled but horizon is not configured to work " +
+                    "with keystone version 3 or above.")
+             LOG.warning(msg)
++        # Starting from 1.7 Django uses OrderedDict for fields and keyOrder
++        # no longer works for it
++        if django.VERSION >= (1, 7):
++            self.fields = collections.OrderedDict(
++                (key, self.fields[key]) for key in fields_ordering)
++        else:
++            self.fields.keyOrder = fields_ordering
+ 
+     @staticmethod
+     def get_region_choices():

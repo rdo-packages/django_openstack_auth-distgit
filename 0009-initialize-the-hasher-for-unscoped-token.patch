@@ -1,0 +1,29 @@
+From 9fa6a3d6b7747f91631a10ce8300bf0f09ce4e53 Mon Sep 17 00:00:00 2001
+From: Matthias Runge <mrunge@redhat.com>
+Date: Thu, 20 Aug 2015 13:50:36 +0200
+Subject: [PATCH] initialize the hasher for unscoped token
+
+Using PKI tokens results in an empty
+projects list in horizon and a 403 error from
+keystone.
+
+Change-Id: If6853343125112340e447e760ee7d997e6e7384f
+Closes-Bug: #1484499
+Closes-Bug: #1486745
+(cherry picked from commit aed28851b933a04dffcff70674f7afad84cb2d57)
+---
+ openstack_auth/user.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/openstack_auth/user.py b/openstack_auth/user.py
+index 9310aa7..521fdea 100644
+--- a/openstack_auth/user.py
++++ b/openstack_auth/user.py
+@@ -91,6 +91,7 @@ class Token(object):
+             hasher.update(self.id)
+             self.id = hasher.hexdigest()
+             # If the scoped_token is long, then unscoped_token must be too.
++            hasher = hashlib.new(algorithm)
+             hasher.update(self.unscoped_token)
+             self.unscoped_token = hasher.hexdigest()
+         self.expires = auth_ref.expires

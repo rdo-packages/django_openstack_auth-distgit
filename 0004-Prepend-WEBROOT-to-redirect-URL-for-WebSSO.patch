@@ -1,0 +1,47 @@
+From 3e9d6ecf680fd571f9fe068a0fc271bcf19ac278 Mon Sep 17 00:00:00 2001
+From: Adam Young <ayoung@redhat.com>
+Date: Tue, 14 Apr 2015 23:44:56 -0400
+Subject: [PATCH] Prepend WEBROOT to redirect URL for WebSSO
+
+Change-Id: Ib5c99e3b7b16bfb64b651d2129643d6f53fe7722
+Closes-Bug: 1444244
+(cherry picked from commit 85b2aaea489f2e89e36bc08b99216939d8076462)
+(cherry picked from commit 3f1eb3f3c6e3fbf8bff010d76362558f7e22b721)
+---
+ openstack_auth/utils.py | 9 +++++++++
+ openstack_auth/views.py | 2 +-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/openstack_auth/utils.py b/openstack_auth/utils.py
+index d861010..358f772 100644
+--- a/openstack_auth/utils.py
++++ b/openstack_auth/utils.py
+@@ -183,6 +183,15 @@ def is_websso_enabled():
+     return websso_enabled and keystonev3_plus
+ 
+ 
++def build_absolute_uri(request, relative_url):
++    """Ensure absolute_uri are relative to WEBROOT."""
++    webroot = getattr(settings, 'WEBROOT', '')
++    if webroot.endswith("/") and relative_url.startswith("/"):
++        webroot = webroot[:-1]
++
++    return request.build_absolute_uri(webroot + relative_url)
++
++
+ def has_in_url_path(url, sub):
+     """Test if the `sub` string is in the `url` path."""
+     scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
+diff --git a/openstack_auth/views.py b/openstack_auth/views.py
+index 8d5a0f5..68a1b08 100644
+--- a/openstack_auth/views.py
++++ b/openstack_auth/views.py
+@@ -60,7 +60,7 @@ def login(request, template_name=None, extra_context=None, **kwargs):
+         protocol = request.POST.get('auth_type', 'credentials')
+         if utils.is_websso_enabled() and protocol != 'credentials':
+             region = request.POST.get('region')
+-            origin = request.build_absolute_uri('/auth/websso/')
++            origin = utils.build_absolute_uri(request, '/auth/websso/')
+             url = ('%s/auth/OS-FEDERATION/websso/%s?origin=%s' %
+                    (region, protocol, origin))
+             return shortcuts.redirect(url)

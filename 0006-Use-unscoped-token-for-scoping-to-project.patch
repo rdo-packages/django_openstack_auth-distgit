@@ -1,0 +1,65 @@
+From cb5040934c3132dbddbb5c24d45f76d2f4fbc062 Mon Sep 17 00:00:00 2001
+From: lin-hua-cheng <os.lcheng@gmail.com>
+Date: Wed, 15 Jul 2015 11:13:38 -0700
+Subject: [PATCH] Use unscoped token for scoping to project
+
+When authenticating a user in v3, always request
+for an unscoped token. Otherwise it would automatically
+default to the default project.
+
+Change-Id: I9e1d9129e2fb35933c803096fca9f1236affc27f
+Closes-Bug: #1474893
+(cherry picked from commit e4062e37069d58814b7c09299d3018297a75ba1d)
+---
+ openstack_auth/backend.py         | 8 +++-----
+ openstack_auth/plugin/password.py | 3 ++-
+ openstack_auth/tests/tests.py     | 3 ++-
+ 3 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/openstack_auth/backend.py b/openstack_auth/backend.py
+index 46c32d4..3859638 100644
+--- a/openstack_auth/backend.py
++++ b/openstack_auth/backend.py
+@@ -138,11 +138,9 @@ class KeystoneBackend(object):
+         request = kwargs.get('request')
+ 
+         if request:
+-            # Check if token is automatically scoped to default_project
+-            # grab the project from this token, to use as a default
+-            # if no recent_project is found in the cookie
+-            recent_project = request.COOKIES.get('recent_project',
+-                                                 unscoped_auth_ref.project_id)
++            # Grab recent_project found in the cookie, try to scope
++            # to the last project used.
++            recent_project = request.COOKIES.get('recent_project')
+ 
+         # if a most recent project was found, try using it first
+         if recent_project:
+diff --git a/openstack_auth/plugin/password.py b/openstack_auth/plugin/password.py
+index 484adc2..4143f25 100644
+--- a/openstack_auth/plugin/password.py
++++ b/openstack_auth/plugin/password.py
+@@ -42,7 +42,8 @@ class PasswordPlugin(base.BasePlugin):
+             return v3_auth.Password(auth_url=auth_url,
+                                     username=username,
+                                     password=password,
+-                                    user_domain_name=user_domain_name)
++                                    user_domain_name=user_domain_name,
++                                    unscoped=True)
+ 
+         else:
+             return v2_auth.Password(auth_url=auth_url,
+diff --git a/openstack_auth/tests/tests.py b/openstack_auth/tests/tests.py
+index 09bdc76..467f814 100644
+--- a/openstack_auth/tests/tests.py
++++ b/openstack_auth/tests/tests.py
+@@ -496,7 +496,8 @@ class OpenStackAuthTestsV3(OpenStackAuthTestsMixin, test.TestCase):
+         return auth_v3.Password(auth_url=url,
+                                 password=password,
+                                 username=username,
+-                                user_domain_name=DEFAULT_DOMAIN)
++                                user_domain_name=DEFAULT_DOMAIN,
++                                unscoped=True)
+ 
+     def _create_token_auth(self, project_id, token=None, url=None):
+         if not token:

@@ -2,7 +2,7 @@
 
 Name:           python-django-openstack-auth
 Version:        1.2.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Django authentication backend for OpenStack Keystone
 
 License:        BSD
@@ -10,8 +10,14 @@ URL:            http://pypi.python.org/pypi/django_openstack_auth/
 Source0:        http://pypi.python.org/packages/source/d/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 
 Patch0001: 0001-remove-runtime-dep-to-python-pbr.patch
-Patch0002: 0002-Extend-User-from-AbstractBaseUser-and-AnonymousUser.patch
-Patch0003: 0003-Configurable-token-hashing.patch
+Patch0002: 0002-Set-default-value-for-new-token-attributes.patch
+Patch0003: 0003-Add-missing-_-import-to-plugin-base.py.patch
+Patch0004: 0004-Prepend-WEBROOT-to-redirect-URL-for-WebSSO.patch
+Patch0005: 0005-Fix-Login-form-s-fields-sorting-for-Django-1.7.patch
+Patch0006: 0006-Use-unscoped-token-for-scoping-to-project.patch
+Patch0007: 0007-Configurable-token-hashing.patch
+Patch0008: 0008-Extend-User-from-AbstractBaseUser-and-AnonymousUser.patch
+Patch0009: 0009-initialize-the-hasher-for-unscoped-token.patch
 
 BuildArch:      noarch
 
@@ -49,6 +55,12 @@ Keystone V2 API.
 %patch0001 -p1
 %patch0002 -p1
 %patch0003 -p1
+%patch0004 -p1
+%patch0005 -p1
+%patch0006 -p1
+%patch0007 -p1
+%patch0008 -p1
+%patch0009 -p1
 
 # Remove bundled egg-info
 rm -rf %{pypi_name}.egg-info
@@ -112,6 +124,12 @@ rm -rf %{buildroot}/%{python_sitelib}/openstack_auth/tests
 %{python_sitelib}/%{pypi_name}-%{version}-py?.?.egg-info
 
 %changelog
+* Fri Aug 21 2015 Matthias Runge <mrunge@redhat.com> - 1.2.0-5
+- backport initialize hasher for unscoped token
+- backport Extend User from AbstractBaseUser
+- backport configurable token hasing
+- use unscoped token for scoping the project
+
 * Fri Jun 19 2015 Matthias Runge <mrunge@redhat.com> - 1.2.0-4
 - "App 'openstack_auth' doesn't have a 'user' model." (rhbz#1232683)
 
