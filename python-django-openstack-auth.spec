@@ -1,44 +1,22 @@
+%if 0%{?fedora}
+# python3-keystoneclient missing
+# python3-oslo-policy missing
+%global with_python3 0
+
+%endif
 %global pypi_name django_openstack_auth
 
 Name:           python-django-openstack-auth
-Version:        1.2.0
-Release:        5%{?dist}
+Version:        2.0.0
+Release:        1%{?dist}
 Summary:        Django authentication backend for OpenStack Keystone
 
 License:        BSD
 URL:            http://pypi.python.org/pypi/django_openstack_auth/
 Source0:        http://pypi.python.org/packages/source/d/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 
-Patch0001: 0001-remove-runtime-dep-to-python-pbr.patch
-Patch0002: 0002-Set-default-value-for-new-token-attributes.patch
-Patch0003: 0003-Add-missing-_-import-to-plugin-base.py.patch
-Patch0004: 0004-Prepend-WEBROOT-to-redirect-URL-for-WebSSO.patch
-Patch0005: 0005-Fix-Login-form-s-fields-sorting-for-Django-1.7.patch
-Patch0006: 0006-Use-unscoped-token-for-scoping-to-project.patch
-Patch0007: 0007-Configurable-token-hashing.patch
-Patch0008: 0008-Extend-User-from-AbstractBaseUser-and-AnonymousUser.patch
-Patch0009: 0009-initialize-the-hasher-for-unscoped-token.patch
-
 BuildArch:      noarch
 
-BuildRequires:  python2-devel
-BuildRequires:  python-setuptools
-BuildRequires:  python-sphinx
-BuildRequires:  python-mox
-BuildRequires:  python-keystoneclient
-BuildRequires:  python-iso8601
-BuildRequires:  python-pbr
-BuildRequires:  python-netaddr
-BuildRequires:  python-oslo-sphinx >= 2.3.0
-BuildRequires:  gettext
-
-Requires:       python-django
-BuildRequires:  python-django
-
-Requires:       python-keystoneclient >= 1:1.1.0
-Requires:       python-six >= 1.9.0
-Requires:       python-oslo-config >= 1.9.3
-Requires:       python-pbr
 
 
 %description
@@ -49,23 +27,89 @@ OpenStack's Keystone Identity API.
 The current version is designed to work with the
 Keystone V2 API.
 
+%package -n python2-django-openstack-auth
+Summary:        Django authentication backend for OpenStack Keystone
+
+%{?python_provide:%python_provide python2-django-openstack-auth}
+BuildRequires:  python2-devel
+BuildRequires:  python-setuptools
+BuildRequires:  python-sphinx
+BuildRequires:  python-keystoneclient
+BuildRequires:  python-iso8601
+BuildRequires:  python-pbr >= 1.6
+BuildRequires:  python-netaddr
+BuildRequires:  python-oslo-sphinx >= 2.3.0
+BuildRequires:  gettext
+BuildRequires:  python-oslo-config >= 2.3.0
+BuildRequires:  python-oslo-policy >= 0.5.0
+BuildRequires:  python-mox3
+BuildRequires:  python-mock
+BuildRequires:  python-testscenarios
+
+Requires:       python-django
+BuildRequires:  python-django
+
+Requires:       python-keystoneclient >= 1:1.6.0
+Requires:       python-six >= 1.9.0
+Requires:       python-oslo-config >= 2.3.0
+Requires:       python-oslo-policy >= 0.5.0
+Requires:       python-pbr >= 1.6
+
+%description -n python2-django-openstack-auth
+Django OpenStack Auth is a pluggable Django authentication backend that
+works with Django's ``contrib.auth`` framework to authenticate a user against
+OpenStack's Keystone Identity API.
+
+The current version is designed to work with the
+Keystone V2 API.
+
+
+%if 0%{?with_python3}
+
+%package -n python3-django-openstack-auth
+Summary:        Django authentication backend for OpenStack Keystone
+
+%{?python_provide:%python_provide python3-django-openstack-auth}
+BuildRequires:  python3-devel
+BuildRequires:  python3-setuptools
+BuildRequires:  python3-sphinx
+BuildRequires:  python3-keystoneclient
+BuildRequires:  python3-iso8601
+BuildRequires:  python3-pbr >= 1.6
+BuildRequires:  python3-netaddr
+BuildRequires:  python3-oslo-sphinx >= 2.3.0
+BuildRequires:  gettext
+BuildRequires:  python3-oslo-config >= 2.3.0
+BuildRequires:  python3-oslo-policy >= 0.5.0
+BuildRequires:  python3-mock
+BuildRequires:  python3-mox3
+BuildRequires:  python3-testscenarios
+
+Requires:       python3-django
+BuildRequires:  python3-django
+
+Requires:       python3-keystoneclient >= 1:1.6.0
+Requires:       python3-six >= 1.9.0
+Requires:       python3-oslo-config >= 2.3.0
+Requires:       python3-oslo-policy >= 0.5.0
+Requires:       python3-pbr >= 1.6
+
+%description -n python3-django-openstack-auth
+Django OpenStack Auth is a pluggable Django authentication backend that
+works with Django's ``contrib.auth`` framework to authenticate a user against
+OpenStack's Keystone Identity API.
+
+The current version is designed to work with the
+Keystone V2 API.
+
+
+%endif
+
+
+
 %prep
 %setup -q -n %{pypi_name}-%{version}
 
-%patch0001 -p1
-%patch0002 -p1
-%patch0003 -p1
-%patch0004 -p1
-%patch0005 -p1
-%patch0006 -p1
-%patch0007 -p1
-%patch0008 -p1
-%patch0009 -p1
-
-# Remove bundled egg-info
-rm -rf %{pypi_name}.egg-info
-
-sed -i s/RPMVERSION/%{version}/ openstack_auth/__init__.py
 
 # Remove the requirements file so that pbr hooks don't add it
 # to distutils requires_dist config
@@ -81,6 +125,10 @@ find . -name "django.po" -exec rm -f '{}' \;
 
 %{__python} setup.py build
 
+%if 0%{?with_python3}
+%{__python3} setup.py build
+%endif
+
 # generate html docs
 PYTHONPATH=.:$PYTHONPATH sphinx-build doc/source html
 
@@ -89,28 +137,22 @@ PYTHONPATH=.:$PYTHONPATH sphinx-build doc/source html
 
 cp -r openstack_auth/locale %{buildroot}/%{python_sitelib}/openstack_auth
 
-%if 0%{?rhel}==6
-# Handling locale files
-# This is adapted from the %%find_lang macro, which cannot be directly
-# used since Django locale files are not located in %%{_datadir}
-#
-# The rest of the packaging guideline still apply -- do not list
-# locale files by hand!
-(cd $RPM_BUILD_ROOT && find . -name 'django*.mo') | %{__sed} -e 's|^.||' |
-%{__sed} -e \
-   's:\(.*/locale/\)\([^/_]\+\)\(.*\.mo$\):%lang(\2) \1\2\3:' \
-      >> django.lang
-%else
 %find_lang django
-%endif
+
 # don't include tests in the RPM
 rm -rf %{buildroot}/%{python_sitelib}/openstack_auth/tests
 
-%check
-%{__python} setup.py test
+%if 0%{?with_python3}
+%{__python3} setup.py install --skip-build --root %{buildroot}
+%endif
 
-%files -f django.lang
-%doc LICENSE
+
+%check
+export PYTHONPATH=$PYTHONPATH
+%{__python} openstack_auth/tests/run_tests.py
+
+%files -n python2-django-openstack-auth -f django.lang
+%license LICENSE
 %dir %{python_sitelib}/openstack_auth
 %dir %{python_sitelib}/openstack_auth/locale
 %dir %{python_sitelib}/openstack_auth/locale/??/
@@ -118,12 +160,31 @@ rm -rf %{buildroot}/%{python_sitelib}/openstack_auth/tests
 %dir %{python_sitelib}/openstack_auth/locale/??/LC_MESSAGES
 %dir %{python_sitelib}/openstack_auth/locale/??_??/LC_MESSAGES
 %{python_sitelib}/openstack_auth/*.py*
-%{python_sitelib}/openstack_auth/openstack
 %{python_sitelib}/openstack_auth/plugin
 %{python_sitelib}/openstack_auth/locale/openstack_auth.pot
 %{python_sitelib}/%{pypi_name}-%{version}-py?.?.egg-info
 
+%if 0%{?with_python3}
+%files -n python3-django-openstack-auth -f django.lang
+%license LICENSE
+%dir %{python3_sitelib}/openstack_auth
+%dir %{python3_sitelib}/openstack_auth/locale
+%dir %{python3_sitelib}/openstack_auth/locale/??/
+%dir %{python3_sitelib}/openstack_auth/locale/??_??/
+%dir %{python3_sitelib}/openstack_auth/locale/??/LC_MESSAGES
+%dir %{python3_sitelib}/openstack_auth/locale/??_??/LC_MESSAGES
+%{python3_sitelib}/openstack_auth/*.py*
+%{python3_sitelib}/openstack_auth/plugin
+%{python3_sitelib}/openstack_auth/locale/openstack_auth.pot
+%{python3_sitelib}/%{pypi_name}-%{version}-py?.?.egg-info
+%endif
+
 %changelog
+* Tue Sep 22 2015 Matthias Runge <mrunge@redhat.com> - 2.0.0-1
+- update to 2.0.0
+- (theoretically) support python3
+- really execute tests
+
 * Fri Aug 21 2015 Matthias Runge <mrunge@redhat.com> - 1.2.0-5
 - backport initialize hasher for unscoped token
 - backport Extend User from AbstractBaseUser
@@ -165,61 +226,3 @@ rm -rf %{buildroot}/%{python_sitelib}/openstack_auth/tests
 
 * Mon Jun 23 2014 Matthias Runge <mrunge@redhat.com> - 1.1.6-1
 - update to 1.1.6 (rhbz#1111877)
-
-* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.5-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
-
-* Thu Apr 03 2014 Matthias Runge <mrunge@redhat.com> - 1.1.5-1
-- update to stable version 1.1.5 (rhbz#1082314)
-
-* Tue Jan 14 2014 Matthias Runge <mrunge@redhat.com> - 1.1.4-1
-- update to stable version 1.1.4 (rhbz#1051773) 
-
-* Fri Oct 11 2013 Matthias Runge <mrunge@redhat.com> - 1.1.3-1
-- update to stable version 1.1.3 (rhbz#1014494)
-
-* Tue Sep 10 2013 Matthias Runge <mrunge@redhat.com> - 1.1.2-1
-- update to stable version 1.1.2 (rhbz#1006012)
-
-* Tue Aug 13 2013 Matthias Runge <mrunge@redhat.com> - 1.1.1-1
-- update to stable version 1.1.1 (rhbz#991783)
-
-* Fri Jul 26 2013 Matthias Runge <mrunge@redhat.com> - 1.1.0-1
-- update to stable version 1.1.0 (rhbz#983007)
-
-* Fri Jun 07 2013 Matthias Runge <mrunge@redhat.com> - 1.0.11-1
-- update to django-openstack-auth-1.0.11 (rhbz#965249)
-
-* Thu Apr 25 2013 Matthias Runge <mrunge@redhat.com> - 1.0.9-1
-- update to 1.0.9 with more Django-1.5 fixes
-
-* Wed Apr 24 2013 Matthias Runge <mrunge@redhat.com> - 1.0.8-1
-- update to 1.0.8 for Django-1.5 compat
-
-* Wed Mar 06 2013 Matthias Runge <mrunge@redhat.com> - 1.0.7-1
-- update to 1.0.7 (rhbz#918435)
-
-* Mon Feb 18 2013 Matthias Runge <mrunge@redhat.com> - 1.0.6-3
-- BR python-iso8601
-
-* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.6-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
-
-* Mon Dec 10 2012 Matthias Runge <mrunge@redhat.com> - 1.0.6-1
-- update to latest upstream version 1.0.6
-
-* Tue Dec 04 2012 Matthias Runge <mrunge@redhat.com> - 1.0.4-1
-- update to latest upstream version 1.0.4
-
-* Mon Nov 05 2012 Matthias Runge <mrunge@redhat.com> - 1.0.3-1
-- update latest upstream version 1.0.3
-
-* Tue Oct 16 2012 Matthias Runge <mrunge@redhat.com> - 1.0.2-3
-- fix build on EPEL6, require Django14 package on EPEL6
-- handle languages by hand on EL6
-
-* Mon Sep 24 2012 Matthias Runge <mrunge@redhat.com> - 1.0.2-2
-- also support f17, el6
-
-* Tue Sep 11 2012 Matthias Runge <mrunge@redhat.com> - 1.0.2-1
-- Initial package.
