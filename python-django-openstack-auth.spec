@@ -7,7 +7,7 @@
 %global pypi_name django_openstack_auth
 
 Name:           python-django-openstack-auth
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}
 Summary:        Django authentication backend for OpenStack Keystone
 
@@ -180,6 +180,9 @@ export PYTHONPATH=$PYTHONPATH
 %endif
 
 %changelog
+* Thu Oct 15 2015 Matthias Runge <mrunge@redhat.com> - 2.0.1-1
+- update to 2.0.1
+
 * Tue Sep 22 2015 Matthias Runge <mrunge@redhat.com> - 2.0.0-1
 - update to 2.0.0
 - (theoretically) support python3
