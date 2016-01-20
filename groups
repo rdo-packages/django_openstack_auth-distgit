@@ -1,3 +1,5 @@
-# UUID                                  	Group Name
-#
-93b015dbc49320b8dbb4ba65823549912a907581	django_openstack_auth-distgit-ptl
+# UUID          Group Name
+6ddfecad023c6f4fa3ac8c4d2583c502ea675a73 	Non-Interactive Users
+92d9ded63ff7a1fc22ecc10302ce0bdbf57075e1       	django_openstack_auth-distgit-core
+93b015dbc49320b8dbb4ba65823549912a907581        	django_openstack_auth-distgit-ptl
+global:Registered-Users		Registered Users
