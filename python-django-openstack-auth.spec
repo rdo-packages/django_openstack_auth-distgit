@@ -81,3 +81,4 @@ rm -rf %{buildroot}/%{python2_sitelib}/openstack_auth/tests
 %{python2_sitelib}/%{pypi_name}-*.egg-info
 
 %changelog
+# REMOVEME: error caused by commit 
