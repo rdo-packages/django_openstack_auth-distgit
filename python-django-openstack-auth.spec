@@ -4,7 +4,7 @@
 %{!?upstream_version: %global upstream_version %{version}%{?milestone}}
 
 Name:           python-django-openstack-auth
-Version:        2.2.0
+Version:        2.2.1
 Release:        1%{?dist}
 Summary:        Django authentication backend for OpenStack Keystone
 
@@ -84,5 +84,8 @@ rm -rf %{buildroot}/%{python2_sitelib}/openstack_auth/tests
 %{python2_sitelib}/%{pypi_name}-*.egg-info
 
 %changelog
+* Wed Sep 14 2016 Haikel Guemar <hguemar@fedoraproject.org> 2.2.1-1
+- Update to 2.2.1
+
 * Thu Mar 24 2016 RDO <rdo-list@redhat.com> 2.2.0-1
 - 2.2.0 Rebuild for Mitaka 
