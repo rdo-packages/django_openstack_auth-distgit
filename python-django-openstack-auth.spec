@@ -12,7 +12,7 @@ Summary:        Django authentication backend for OpenStack Keystone
 
 License:        BSD
 URL:            http://pypi.python.org/pypi/django_openstack_auth/
-Source0:        http://tarballs.openstack.org/django_openstack_auth/django_openstack_auth-%{upstream_version}.tar.gz
+Source0:        https://tarballs.openstack.org/django_openstack_auth/django_openstack_auth-%{upstream_version}.tar.gz
 
 BuildArch:      noarch
 
