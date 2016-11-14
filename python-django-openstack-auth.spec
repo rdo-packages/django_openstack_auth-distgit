@@ -6,7 +6,7 @@
 %global pypi_name django_openstack_auth
 
 Name:           python-django-openstack-auth
-Version:        2.4.1
+Version:        2.4.2
 Release:        1%{?dist}
 Summary:        Django authentication backend for OpenStack Keystone
 
@@ -181,6 +181,9 @@ export PYTHONPATH=$PYTHONPATH
 %endif
 
 %changelog
+* Mon Nov 14 2016 Haikel Guemar <hguemar@fedoraproject.org> 2.4.2-1
+- Update to 2.4.2
+
 * Thu Sep 29 2016 Haikel Guemar <hguemar@fedoraproject.org> 2.4.1-1
 - Update to 2.4.1
 
