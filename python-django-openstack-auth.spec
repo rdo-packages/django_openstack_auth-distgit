@@ -35,12 +35,12 @@ BuildRequires:  python-setuptools
 BuildRequires:  python-sphinx
 BuildRequires:  python-keystoneclient
 BuildRequires:  python-iso8601
-BuildRequires:  python-pbr >= 1.6
+BuildRequires:  python-pbr >= 1.8
 BuildRequires:  python-netaddr
-BuildRequires:  python-oslo-sphinx >= 2.3.0
+BuildRequires:  python-oslo-sphinx
 BuildRequires:  gettext
-BuildRequires:  python-oslo-config >= 2.5.0
-BuildRequires:  python-oslo-policy >= 0.5.0
+BuildRequires:  python-oslo-config
+BuildRequires:  python-oslo-policy
 BuildRequires:  python-mox3
 BuildRequires:  python-mock
 BuildRequires:  python-testscenarios
@@ -48,11 +48,12 @@ BuildRequires:  python-testscenarios
 Requires:       python-django
 BuildRequires:  python-django
 
-Requires:       python-keystoneclient >= 1.6.0
+Requires:       python-keystoneclient >= 1:3.8.0
 Requires:       python-six >= 1.9.0
-Requires:       python-oslo-config >= 2.3.0
-Requires:       python-oslo-policy >= 0.5.0
-Requires:       python-pbr >= 1.6
+Requires:       python-oslo-config >= 2:3.14.0
+Requires:       python-oslo-policy >= 1.17.0
+Requires:       python-pbr >= 1.8
+Requires:       python-keystoneauth1 >= 2.18.0
 
 %description -n python2-django-openstack-auth
 Django OpenStack Auth is a pluggable Django authentication backend that
@@ -87,11 +88,12 @@ BuildRequires:  python3-testscenarios
 Requires:       python3-django
 BuildRequires:  python3-django
 
-Requires:       python3-keystoneclient >= 1.6.0
+Requires:       python3-keystoneclient >= 1:3.8.0
 Requires:       python3-six >= 1.9.0
-Requires:       python3-oslo-config >= 2.3.0
-Requires:       python3-oslo-policy >= 0.5.0
-Requires:       python3-pbr >= 1.6
+Requires:       python3-oslo-config >= 2:3.14.0
+Requires:       python3-oslo-policy >= 1.17.0
+Requires:       python3-pbr >= 1.8
+Requires:       python3-keystoneauth1 >= 2.18.0
 
 %description -n python3-django-openstack-auth
 Django OpenStack Auth is a pluggable Django authentication backend that
