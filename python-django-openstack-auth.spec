@@ -16,7 +16,7 @@ Source0:        https://tarballs.openstack.org/django_openstack_auth/django_open
 
 BuildArch:      noarch
 
-
+BuildRequires:  git
 
 %description
 Django OpenStack Auth is a pluggable Django authentication backend that
@@ -37,7 +37,7 @@ BuildRequires:  python-keystoneclient
 BuildRequires:  python-iso8601
 BuildRequires:  python-pbr >= 1.8
 BuildRequires:  python-netaddr
-BuildRequires:  python-oslo-sphinx
+BuildRequires:  python-openstackdocstheme
 BuildRequires:  gettext
 BuildRequires:  python-oslo-config
 BuildRequires:  python-oslo-policy
@@ -77,7 +77,6 @@ BuildRequires:  python3-keystoneclient
 BuildRequires:  python3-iso8601
 BuildRequires:  python3-pbr >= 1.6
 BuildRequires:  python3-netaddr
-BuildRequires:  python3-oslo-sphinx >= 2.3.0
 BuildRequires:  gettext
 BuildRequires:  python3-oslo-config >= 2.3.0
 BuildRequires:  python3-oslo-policy >= 0.5.0
@@ -108,7 +107,7 @@ Keystone V2 API.
 
 
 %prep
-%autosetup -n %{pypi_name}-%{upstream_version}
+%autosetup -n %{pypi_name}-%{upstream_version} -S git
 
 
 # Remove the requirements file so that pbr hooks don't add it
