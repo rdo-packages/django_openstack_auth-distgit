@@ -183,3 +183,4 @@ export PYTHONPATH=$PYTHONPATH
 %endif
 
 %changelog
+# REMOVEME: error caused by commit http://git.openstack.org/cgit/openstack/django_openstack_auth/commit/?id=d1efd47a0b19072bc30a5d8206a0d5bfff3cdbb7
