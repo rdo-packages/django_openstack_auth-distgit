@@ -151,7 +151,6 @@ rm -rf %{buildroot}/%{python3_sitelib}/openstack_auth/tests
 
 
 %check
-export PYTHONPATH=$PYTHONPATH
 %{__python} openstack_auth/tests/run_tests.py
 
 %files -n python2-django-openstack-auth -f django.lang
