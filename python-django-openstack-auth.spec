@@ -129,7 +129,7 @@ find . -name "django.po" -exec rm -f '{}' \;
 %endif
 
 # generate html docs
-PYTHONPATH=.:$PYTHONPATH sphinx-build doc/source html
+%{__python2} setup.py build_sphinx -b html
 
 %install
 %{__python2} setup.py install --skip-build --root %{buildroot}
