@@ -83,6 +83,7 @@ BuildRequires:  python3-oslo-policy >= 1.23.0
 BuildRequires:  python3-mock
 BuildRequires:  python3-mox3
 BuildRequires:  python3-testscenarios
+BuildRequires:  openstack-macros
 
 Requires:       python3-django
 BuildRequires:  python3-django
@@ -112,7 +113,7 @@ Keystone V2 API.
 
 # Remove the requirements file so that pbr hooks don't add it
 # to distutils requires_dist config
-rm -f {test-,}requirements.txt
+%py_req_cleanup
 
 %build
 # generate translations
