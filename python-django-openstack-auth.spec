@@ -5,6 +5,14 @@
 
 %global pypi_name django_openstack_auth
 
+%global common_desc \
+Django OpenStack Auth is a pluggable Django authentication backend that \
+works with Django's ``contrib.auth`` framework to authenticate a user against \
+OpenStack's Keystone Identity API. \
+ \
+The current version is designed to work with the \
+Keystone V2 API.
+
 Name:           python-django-openstack-auth
 Version:        XXX
 Release:        XXX
