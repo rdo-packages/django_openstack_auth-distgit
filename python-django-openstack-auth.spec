@@ -5,6 +5,14 @@
 
 %global pypi_name django_openstack_auth
 
+%global common_desc \
+Django OpenStack Auth is a pluggable Django authentication backend that \
+works with Django's ``contrib.auth`` framework to authenticate a user against \
+OpenStack's Keystone Identity API. \
+ \
+The current version is designed to work with the \
+Keystone V2 API.
+
 Name:           python-django-openstack-auth
 Version:        XXX
 Release:        XXX
@@ -19,12 +27,7 @@ BuildArch:      noarch
 BuildRequires:  git
 
 %description
-Django OpenStack Auth is a pluggable Django authentication backend that
-works with Django's ``contrib.auth`` framework to authenticate a user against
-OpenStack's Keystone Identity API.
-
-The current version is designed to work with the
-Keystone V2 API.
+%{common_desc}
 
 %package -n python2-django-openstack-auth
 Summary:        Django authentication backend for OpenStack Keystone
@@ -56,12 +59,7 @@ Requires:       python-pbr >= 2.0.0
 Requires:       python-keystoneauth1 >= 3.1.0
 
 %description -n python2-django-openstack-auth
-Django OpenStack Auth is a pluggable Django authentication backend that
-works with Django's ``contrib.auth`` framework to authenticate a user against
-OpenStack's Keystone Identity API.
-
-The current version is designed to work with the
-Keystone V2 API.
+%{common_desc}
 
 
 %if 0%{?with_python3}
@@ -96,14 +94,7 @@ Requires:       python3-pbr >= 2.0.0
 Requires:       python3-keystoneauth1 >= 3.1.0
 
 %description -n python3-django-openstack-auth
-Django OpenStack Auth is a pluggable Django authentication backend that
-works with Django's ``contrib.auth`` framework to authenticate a user against
-OpenStack's Keystone Identity API.
-
-The current version is designed to work with the
-Keystone V2 API.
-
-
+%{common_desc}
 %endif
 
 
