@@ -17,6 +17,7 @@ Source0:        https://tarballs.openstack.org/django_openstack_auth/django_open
 BuildArch:      noarch
 
 BuildRequires:  git
+BuildRequires:  openstack-macros
 
 %description
 Django OpenStack Auth is a pluggable Django authentication backend that
@@ -83,7 +84,6 @@ BuildRequires:  python3-oslo-policy >= 1.23.0
 BuildRequires:  python3-mock
 BuildRequires:  python3-mox3
 BuildRequires:  python3-testscenarios
-BuildRequires:  openstack-macros
 
 Requires:       python3-django
 BuildRequires:  python3-django
