@@ -1,0 +1,4 @@
+django_openstack_auth was deprecated upstream
+
+Code was merged upstream into horizon
+See https://review.openstack.org/#/q/I74b10a90fe79fc768cfb8de6f68d3cd2f4938e51
